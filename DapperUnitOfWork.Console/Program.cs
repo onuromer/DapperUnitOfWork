@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace DapperUnitOfWork.Console
 {
@@ -20,8 +21,12 @@ namespace DapperUnitOfWork.Console
     {
         static void Main(string[] args)
         {
-            using(var uow = new UnitOfWork("LosGatos"))
+            using(var uow = new UnitOfWork(ConfigurationManager.ConnectionStrings["LosGatos"].ConnectionString))
             {
+                var orangeMackerela = new Breed { Name = "Orange Mackerel" };
+                uow.BreedRepository.Add(orangeMackerela);
+                uow.Commit();
+                
                 var orangeMackerel = uow.BreedRepository.FindByName("Orange Mackerel");
                 var morris = new Cat { BreedId = orangeMackerel.BreedId, Name = "Morris", Age = 12 };
                 uow.CatRepository.Add(morris);
